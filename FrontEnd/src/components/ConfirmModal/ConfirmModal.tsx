@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import type { ReactNode } from "react";
 import styles from "./ConfirmModal.module.scss";
 
@@ -22,29 +23,50 @@ const ConfirmModal = ({
 }: ConfirmModalProps) => {
   if (!visible) return null;
 
+  const dialogRef = useRef<HTMLDialogElement | null>(null);
+
+  useEffect(() => {
+    // focus the overlay so keyboard events (Escape) are handled
+    if (dialogRef.current) {
+      dialogRef.current.focus();
+    }
+  }, []);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDialogElement>) => {
+    if (e.key === "Escape") {
+      e.stopPropagation();
+      onCancel();
+    }
+  };
+
   return (
-  <dialog
-    className={styles.modalOverlay}
-    onClick={onCancel}
-    aria-labelledby="confirm-modal-title"
-  >
-    <div
-      className={styles.modal}
-      onClick={(event) => event.stopPropagation()}
+    <dialog
+      ref={dialogRef}
+      className={styles.modalOverlay}
+      onClick={onCancel}
+      onKeyDown={handleKeyDown}
+      tabIndex={-1}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="confirm-modal-title"
     >
-      <h3 id="confirm-modal-title">{title}</h3>
-      <p>{message}</p>
-      <div className={styles.actions}>
-        <button type="button" className={styles.cancel} onClick={onCancel}>
-          {cancelLabel}
-        </button>
-        <button type="button" className={styles.confirm} onClick={onConfirm}>
-          {confirmLabel}
-        </button>
+      <div
+        className={styles.modal}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <h3 id="confirm-modal-title">{title}</h3>
+        <p>{message}</p>
+        <div className={styles.actions}>
+          <button type="button" className={styles.cancel} onClick={onCancel}>
+            {cancelLabel}
+          </button>
+          <button type="button" className={styles.confirm} onClick={onConfirm}>
+            {confirmLabel}
+          </button>
+        </div>
       </div>
-    </div>
-  </dialog>
-);
+    </dialog>
+  );
 };
 
 export default ConfirmModal;

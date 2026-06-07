@@ -86,7 +86,7 @@ const GroupMembersPage = ({ group, onBack }: Props) => {
           );
         }
       } else {
-        console.error("Błąd pobierania członków grupy:", sanitizeErrorForLog(membersResult.reason));
+  console.error("Błąd pobierania członków grupy:", sanitizeErrorForLog(membersResult.reason));
         setMembers([]);
         setErrorMessage((current) =>
           current || "Nie udało się pobrać członków grupy."
@@ -96,7 +96,7 @@ const GroupMembersPage = ({ group, onBack }: Props) => {
       if (debtsResult.status === "fulfilled") {
         setDebts(debtsResult.value);
       } else {
-        console.error("Błąd pobierania długów grupy:", sanitizeErrorForLog(debtsResult.reason));
+  console.error("Błąd pobierania długów grupy:", sanitizeErrorForLog(debtsResult.reason));
         setDebts([]);
         setErrorMessage((current) =>
           current || "Nie udało się pobrać długów grupy."

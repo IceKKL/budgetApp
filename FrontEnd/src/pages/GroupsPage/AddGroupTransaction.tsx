@@ -102,7 +102,8 @@ const AddGroupTransaction = ({
       onTransactionAdded();
       refreshBalance(null);
     } catch (error: unknown) {
-      console.error("Błąd dodawania transakcji grupowej:", error);
+      const sanitized = error instanceof Error ? error.message : String(error);
+      console.error("Błąd dodawania transakcji grupowej:", sanitized);
       setErrorMessage(
         getErrorMessage(error, "Nie udało się dodać transakcji grupowej.")
       );

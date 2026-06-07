@@ -77,7 +77,7 @@
   color: $text-color;
 
   &:hover {
-    background-color: rgba($primary-color, 0.1);
+    background-color: rgba(27,94,32, 0.08);
     transform: translateY(-2px);
   }
 }
@@ -94,7 +94,7 @@
   font-size: 0.9rem;
 
   &:hover {
-    background-color: color.adjust($secondary-color, $lightness: -10%);
+    background-color: #8e1414;
   }
 }
 
@@ -162,7 +162,7 @@
 
 .infoMessage {
   color: $text-color;
-  background-color: rgba($primary-color, 0.08);
+  background-color: rgba(27,94,32, 0.06);
   border-left: 4px solid $primary-color;
   padding: 0.8rem 1rem;
   border-radius: 6px;
@@ -228,8 +228,8 @@
 }
 
 .statusOpen {
-  background-color: rgba($secondary-color, 0.12);
-  color: color.adjust($secondary-color, $lightness: -15%);
+  background-color: rgba(183,28,28, 0.12);
+  color: #7a1414;
 }
 
 .statusPending {
@@ -238,16 +238,16 @@
 }
 
 .statusPaid {
-  background-color: rgba($primary-color, 0.16);
+  background-color: rgba(27,94,32, 0.14);
   color: color.adjust($primary-color, $lightness: -20%);
 }
 
 .debtorName {
-  color: #2563eb;
+  color: #1e40af; /* darker blue */
 }
 
 .creditorName {
-  color: #16a34a;
+  color: #15803d; /* darker green */
 }
 
 .input {

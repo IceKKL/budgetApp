@@ -47,7 +47,8 @@ const GroupDebtsPage = () => {
       setDebts(data.debtsData);
       setOwnerId(data.ownerId);
     } catch (error: unknown) {
-      console.error("Błąd pobierania długów:", error);
+      const message = error instanceof Error ? error.message : String(error);
+      console.error("Błąd pobierania długów:", message);
       setDebts([]);
       setErrorMessage(getErrorMessage(error, "Nie udało się pobrać długów grupy."));
     }
@@ -65,7 +66,8 @@ const GroupDebtsPage = () => {
       })
       .catch((error: unknown) => {
         if (ignore) return;
-        console.error("Błąd pobierania długów:", error);
+        const message = error instanceof Error ? error.message : String(error);
+        console.error("Błąd pobierania długów:", message);
         setDebts([]);
         setErrorMessage(getErrorMessage(error, "Nie udało się pobrać długów grupy."));
       });
@@ -84,7 +86,8 @@ const GroupDebtsPage = () => {
       setDebtToDelete(null);
       refreshDebts();
     } catch (error: unknown) {
-      console.error("Błąd usuwania długu:", error);
+      const message = error instanceof Error ? error.message : String(error);
+      console.error("Błąd usuwania długu:", message);
       setErrorMessage(getErrorMessage(error, "Nie udało się usunąć długu."));
     }
   };
@@ -114,7 +117,8 @@ const GroupDebtsPage = () => {
       await groupsApi.markDebtAsPaid(debtId);
       refreshDebts();
     } catch (error: unknown) {
-      console.error("Błąd oznaczania długu jako opłaconego:", error);
+      const message = error instanceof Error ? error.message : String(error);
+      console.error("Błąd oznaczania długu jako opłaconego:", message);
       setErrorMessage(
         getErrorMessage(error, "Nie udało się oznaczyć długu jako opłaconego.")
       );
@@ -127,7 +131,8 @@ const GroupDebtsPage = () => {
       await groupsApi.confirmDebtPayment(debtId);
       refreshDebts();
     } catch (error: unknown) {
-      console.error("Błąd potwierdzania spłaty długu:", error);
+      const message = error instanceof Error ? error.message : String(error);
+      console.error("Błąd potwierdzania spłaty długu:", message);
       setErrorMessage(
         getErrorMessage(error, "Nie udało się potwierdzić spłaty długu.")
       );
