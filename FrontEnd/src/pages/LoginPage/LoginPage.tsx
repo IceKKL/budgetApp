@@ -24,8 +24,8 @@ const LoginPage: React.FC = () => {
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response?.data) {
-          setError(typeof error.response.data === 'string' 
-            ? error.response.data 
+          setError(typeof error.response.data === 'string'
+            ? error.response.data
             : error.response.data.message || 'Błąd logowania');
         } else {
           setError('Wystąpił błąd podczas logowania.');
@@ -41,23 +41,25 @@ const LoginPage: React.FC = () => {
       <h2 className={styles.title}>Logowanie</h2>
       <form onSubmit={handleLogin} className={styles.form}>
         <div className={styles.formGroup}>
-          <label>Email:</label>
-          <input 
-            type="email" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
-            required 
+          <label htmlFor="email">Email:</label>
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
             className={styles.input}
           />
           {error && <ErrorMessage message={error} />}
         </div>
         <div className={styles.formGroup}>
-          <label>Hasło:</label>
-          <input 
-            type="password" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-            required 
+          <label htmlFor="password">Hasło:</label>
+          <input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
             className={styles.input}
           />
         </div>

@@ -26,24 +26,24 @@ const Navbar = () => {
             </>
           )}
         </div>
-        <div className={styles["nav-container"]}>
-          {!isAuthenticated ? (
-            <>
-              <li>
-                <Link to="/login">Logowanie</Link>
-              </li>
-              <li>
-                <Link to="/register">Rejestracja</Link>
-              </li>
-            </>
-          ) : (
+      <div className={styles["nav-container"]}>
+        {isAuthenticated ? (
+          <li>
+            <button onClick={logout} className={styles.logout}>
+              Wyloguj
+            </button>
+          </li>
+        ) : (
+          <>
             <li>
-              <button onClick={logout} className={styles.logout}>
-                Wyloguj
-              </button>
+              <Link to="/login">Logowanie</Link>
             </li>
-          )}
-        </div>
+            <li>
+              <Link to="/register">Rejestracja</Link>
+            </li>
+          </>
+        )}
+      </div>
       </ul>
     </nav>
   );

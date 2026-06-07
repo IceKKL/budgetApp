@@ -84,7 +84,7 @@ const TransactionList = () => {
     const errors: { [key: string]: string } = {};
     const { amount, type, tags, notes } = editValues;
 
-    if (!amount || parseFloat(amount.toString()) <= 0) {
+    if (!amount || Number.parseFloat(amount.toString()) <= 0) {
       errors.amount = "Kwota musi być większa od zera.";
     }
 
@@ -183,12 +183,15 @@ const TransactionList = () => {
           </tr>
         </thead>
         <tbody>
-          {transactions.map((transaction) => (
-            <tr key={transaction.id}>
-              <td>
-                {editingTransactionId === transaction.id ? (
-                  <>
-                    <input
+          {transactions.map((transaction) => {
+            const transactionTypeLabel =
+              transaction.type === "INCOME" ? "Przychód" : "Wydatek"; 
+            return (
+              <tr key={transaction.id}>
+                <td>
+                  {editingTransactionId === transaction.id ? (
+                    <>
+                      <input
                       type="number"
                       value={editValues.amount || ""}
                       onChange={(e) => handleEditChange(e, "amount")}
@@ -216,10 +219,8 @@ const TransactionList = () => {
                       <p className={styles.error}>{editErrors.type}</p>
                     )}
                   </>
-                ) : transaction.type === "INCOME" ? (
-                  "Przychód"
                 ) : (
-                  "Wydatek"
+                  transactionTypeLabel
                 )}
               </td>
               <td>
@@ -285,7 +286,8 @@ const TransactionList = () => {
                 )}
               </td>
             </tr>
-          ))}
+            );
+          })}
         </tbody>
       </table>
 

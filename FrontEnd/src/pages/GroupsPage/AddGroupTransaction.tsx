@@ -34,31 +34,28 @@ const AddGroupTransaction = ({
 
   const memberIds = useMemo(() => members.map((member) => member.userId), [members]);
   const effectiveSelectedUserIds = useMemo(() => {
-    if (!hasCustomParticipants) return memberIds;
-
-    const existingMemberIds = new Set(memberIds.map(String));
-    return selectedUserIds.filter((id) => existingMemberIds.has(String(id)));
+    if (hasCustomParticipants) {
+      const existingMemberIds = new Set(memberIds.map(String));
+      return selectedUserIds.filter((id) => existingMemberIds.has(String(id)));
+    }
+    return memberIds;
   }, [hasCustomParticipants, memberIds, selectedUserIds]);
 
   const getErrorMessage = (error: unknown, fallback: string) => {
     if (error instanceof Error && error.message.trim()) {
       return error.message.replace(/^Wystąpił błąd:\s*/i, "");
     }
-
     return fallback;
   };
 
   const toggleUserSelection = (userId: Id) => {
     setHasCustomParticipants(true);
-    setSelectedUserIds((current) =>
-      (hasCustomParticipants ? current : memberIds).some(
-        (id) => String(id) === String(userId)
-      )
-        ? (hasCustomParticipants ? current : memberIds).filter(
-            (id) => String(id) !== String(userId)
-          )
-        : [...(hasCustomParticipants ? current : memberIds), userId]
-    );
+    const baseList = hasCustomParticipants ? selectedUserIds : memberIds;
+    const isAlreadySelected = baseList.some((id) => String(id) === String(userId));
+    const updatedList = isAlreadySelected
+      ? baseList.filter((id) => String(id) !== String(userId))
+      : [...baseList, userId];
+    setSelectedUserIds(updatedList);
   };
 
   const handleSubmit = async (e: FormEvent) => {

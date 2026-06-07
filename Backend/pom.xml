@@ -29,6 +29,7 @@
     <properties>
         <java.version>21</java.version>
         <lombok.version>1.18.36</lombok.version>
+        <sonar.organization>icekkl</sonar.organization>
     </properties>
     <dependencies>
         <dependency>
