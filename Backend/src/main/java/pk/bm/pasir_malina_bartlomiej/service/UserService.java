@@ -14,8 +14,8 @@ import pk.bm.pasir_malina_bartlomiej.dto.UserDTO;
 import pk.bm.pasir_malina_bartlomiej.model.User;
 import pk.bm.pasir_malina_bartlomiej.repository.UserRepository;
 
-
 import java.util.ArrayList;
+
 @NullMarked
 @Service
 public class UserService implements UserDetailsService {
@@ -31,7 +31,7 @@ public class UserService implements UserDetailsService {
 
     public User register(UserDTO dto) {
         if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
-            throw new UsernameNotFoundException("Użytkownik z tym adresem e-mail już istnieje");
+            throw new BadCredentialsException("Nieprawidłowe dane rejestracji");
         }
 
         User user = new User();
@@ -43,7 +43,7 @@ public class UserService implements UserDetailsService {
 
     public String login(LoginDTO dto) {
         User user = userRepository.findByEmail(dto.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("Nie znaleziono użytkownika"));
+                .orElseThrow(() -> new BadCredentialsException("Nieprawidłowe dane logowania"));
 
         if (!encoder.matches(dto.getPassword(), user.getPassword())) {
             throw new BadCredentialsException("Nieprawidłowe dane logowania");
@@ -71,8 +71,8 @@ public class UserService implements UserDetailsService {
                 .getPrincipal();
 
         String email;
-        if (principal instanceof org.springframework.security.core.userdetails.UserDetails) {
-            email = ((org.springframework.security.core.userdetails.UserDetails) principal).getUsername();
+        if (principal instanceof UserDetails userDetails) {
+            email = userDetails.getUsername();
         } else {
             email = principal.toString();
         }

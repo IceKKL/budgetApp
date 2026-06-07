@@ -2,6 +2,7 @@ package pk.bm.pasir_malina_bartlomiej.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,6 +43,6 @@ public class Transaction {
         this.tags = tags;
         this.notes = notes;
         this.user = user;
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = LocalDateTime.now(ZoneId.of("UTC"));
     }
 }

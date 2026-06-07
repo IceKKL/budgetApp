@@ -19,6 +19,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MembershipService {
 
+    private static final String GROUP_NOT_FOUND_PREFIX = "Nie znaleziono grupy o ID: ";
+
     private final MembershipRepository membershipRepository;
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
@@ -39,9 +41,8 @@ public class MembershipService {
 
         Group group = groupRepository.findById(membershipDTO.getGroupId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Nie znaleziono grupy o ID: " + membershipDTO.getGroupId()));
+                        GROUP_NOT_FOUND_PREFIX + membershipDTO.getGroupId()));
 
-        // Validation: check if user is already member of group
         boolean alreadyMember = membershipRepository.findByGroupId(group.getId()).stream()
                 .anyMatch(membership -> membership.getUser().getId().equals(user.getId()));
 
@@ -61,8 +62,8 @@ public class MembershipService {
         Membership membership = membershipRepository.findById(membershipId)
                 .orElseThrow(() -> new EntityNotFoundException("Członkostwo nie istnieje"));
 
-        User currentUser = currentUserService.getCurrentUser(); // who is trying to remove member
-        User groupOwner = membership.getGroup().getOwner(); // who is the owner of the group
+        User currentUser = currentUserService.getCurrentUser();
+        User groupOwner = membership.getGroup().getOwner();
 
         if (!currentUser.getId().equals(groupOwner.getId())) {
             throw new AccessDeniedException("Tylko właściciel grupy może usuwać członków.");
@@ -78,7 +79,7 @@ public class MembershipService {
     public void assertCurrentUserIsGroupMember(Long groupId) {
         groupRepository.findById(groupId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Nie znaleziono grupy o ID: " + groupId));
+                        GROUP_NOT_FOUND_PREFIX + groupId));
 
         User currentUser = currentUserService.getCurrentUser();
         assertUserIsGroupMember(groupId, currentUser.getId());
@@ -87,7 +88,7 @@ public class MembershipService {
     public void assertCurrentUserIsGroupOwner(Long groupId) {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Nie znaleziono grupy o ID: " + groupId));
+                        GROUP_NOT_FOUND_PREFIX + groupId));
 
         User currentUser = currentUserService.getCurrentUser();
         if (!group.getOwner().getId().equals(currentUser.getId())) {

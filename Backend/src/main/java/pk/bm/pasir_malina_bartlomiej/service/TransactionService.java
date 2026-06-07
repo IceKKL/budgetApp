@@ -13,10 +13,13 @@ import pk.bm.pasir_malina_bartlomiej.repository.TransactionRepository;
 import pk.bm.pasir_malina_bartlomiej.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Service
 public class TransactionService {
+
+    private static final ZoneId UTC = ZoneId.of("UTC");
 
     private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
@@ -50,10 +53,6 @@ public class TransactionService {
         return createTransactionForUser(dto, userService.getAuthenticatedUser());
     }
 
-    /**
-     * Tworzy transakcję dla wskazanego użytkownika (używane przez GroupTransactionService
-     * do aktualizacji bilansu przy dodaniu wydatku grupowego).
-     */
     public Transaction createTransactionForUser(TransactionDTO dto, User user) {
         Transaction transaction = new Transaction();
         transaction.setAmount(dto.getAmount());
@@ -61,7 +60,7 @@ public class TransactionService {
         transaction.setTags(dto.getTags());
         transaction.setNotes(dto.getNotes());
         transaction.setUser(user);
-        transaction.setTimestamp(LocalDateTime.now());
+        transaction.setTimestamp(LocalDateTime.now(UTC));
         return transactionRepository.save(transaction);
     }
 
@@ -107,7 +106,7 @@ public class TransactionService {
 
         if (days != null && days > 0) {
             long secondsToSubtract = Math.round(days * 24 * 60 * 60);
-            LocalDateTime threshold = LocalDateTime.now().minusSeconds(secondsToSubtract);
+            LocalDateTime threshold = LocalDateTime.now(UTC).minusSeconds(secondsToSubtract);
             transactions = transactionRepository.findAllByUserAndTimestampGreaterThanEqual(user, threshold);
         } else {
             transactions = transactionRepository.findByUser(user);

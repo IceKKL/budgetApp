@@ -26,17 +26,17 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody UserDTO userDTO) {
-        return ResponseEntity.ok(userService.register(userDTO));
-    }
+public ResponseEntity<Object> register(@Valid @RequestBody UserDTO userDTO) {
+    return ResponseEntity.ok(userService.register(userDTO));
+}
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginDTO dto) {
-        try {
-            String token = userService.login(dto);
-            return ResponseEntity.ok(Map.of("token", token));
-        } catch (UsernameNotFoundException | BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        }
+@PostMapping("/login")
+public ResponseEntity<Object> login(@Valid @RequestBody LoginDTO dto) {
+    try {
+        String token = userService.login(dto);
+        return ResponseEntity.ok(Map.of("token", token));
+    } catch (UsernameNotFoundException | BadCredentialsException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
+}
 }

@@ -19,6 +19,8 @@ import pk.bm.pasir_malina_bartlomiej.repository.UserRepository;
 @RequiredArgsConstructor
 public class DebtService {
 
+    private static final String NOT_FOUND_SUFFIX = " nie istnieje.";
+
     private final DebtRepository debtRepository;
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
@@ -35,15 +37,15 @@ public class DebtService {
     public Debt createDebt(DebtDTO debtDTO) {
         Group group = groupRepository.findById(debtDTO.getGroupId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Nie można utworzyć długu. Grupa o ID " + debtDTO.getGroupId() + " nie istnieje."));
+                        "Nie można utworzyć długu. Grupa o ID " + debtDTO.getGroupId() + NOT_FOUND_SUFFIX));
 
         User debtor = userRepository.findById(debtDTO.getDebtorId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Nie można utworzyć długu. Dłużnik o ID " + debtDTO.getDebtorId() + " nie istnieje."));
+                        "Nie można utworzyć długu. Dłużnik o ID " + debtDTO.getDebtorId() + NOT_FOUND_SUFFIX));
 
         User creditor = userRepository.findById(debtDTO.getCreditorId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Nie można utworzyć długu. Wierzyciel o ID " + debtDTO.getCreditorId() + " nie istnieje."));
+                        "Nie można utworzyć długu. Wierzyciel o ID " + debtDTO.getCreditorId() + NOT_FOUND_SUFFIX));
 
         membershipService.assertCurrentUserIsGroupMember(group.getId());
         membershipService.assertUserIsGroupMember(group.getId(), debtor.getId());
@@ -70,7 +72,7 @@ public class DebtService {
     public void deleteDebt(Long debtId) {
         Debt debt = debtRepository.findById(debtId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Nie można usunąć długu. Dług o ID " + debtId + " nie istnieje."));
+                        "Nie można usunąć długu. Dług o ID " + debtId + NOT_FOUND_SUFFIX));
 
         membershipService.assertCurrentUserIsGroupMember(debt.getGroup().getId());
         User currentUser = currentUserService.getCurrentUser();
@@ -102,7 +104,6 @@ public class DebtService {
         debt.setPaidByDebtor(true);
         debt.setConfirmedByCreditor(false);
 
-        // Rejestrujemy EXPENSE dla dłużnika — spłaca swój dług
         TransactionDTO debtorUpdate = new TransactionDTO();
         debtorUpdate.setAmount(debt.getAmount());
         debtorUpdate.setType("EXPENSE");
@@ -127,7 +128,6 @@ public class DebtService {
 
         debt.setConfirmedByCreditor(true);
 
-        // Rejestrujemy INCOME dla wierzyciela — otrzymuje zwrot pieniędzy
         TransactionDTO creditorUpdate = new TransactionDTO();
         creditorUpdate.setAmount(debt.getAmount());
         creditorUpdate.setType("INCOME");
